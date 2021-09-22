@@ -11,8 +11,7 @@ const check = function () {
   } else if (userInput < secretNumber) {
     score = checkScore("Too Low!", score);
   } else {
-    checkHighScore(score);
-    win();
+    win(score);
   }
 };
 
@@ -47,26 +46,32 @@ const reset = function () {
 
   //style to original
   document.querySelector("body").style.backgroundColor = "#222";
+
+  //Enter Player name
+  playerName = prompt("Enter Player Name");
 };
 
-const win = function () {
+const win = function (score) {
+  if (highestScore < score) {
+    highestScore = score;
+    topPlayer = playerName;
+  }
   displayMessageScore("Correct!", score);
   document.querySelector("body").style.backgroundColor = "#60b347";
   document.querySelector(".number").textContent = secretNumber;
   document.querySelector(".highscore").textContent = highestScore;
-};
-
-const checkHighScore = function (score) {
-  if (highestScore < score) {
-    highestScore = score;
-    return highestScore;
-  }
+  document.querySelector(".player").textContent = topPlayer;
 };
 
 //Global Variables
 let highestScore = 0; //record highest score
 let score = 20; //Player Score
 let secretNumber = randomizer(); //secret Number
+let playerName = "";
+let topPlayer = "";
+
+//Enter Player name
+playerName = prompt("Enter Player Name");
 
 //DOM
 document.querySelector(".check").addEventListener("click", check);
