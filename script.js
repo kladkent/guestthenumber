@@ -4,24 +4,15 @@
 const check = function () {
   // start game by clicking check button
   const userInput = Number(document.querySelector(".guess").value);
-
-  if (score !== 0) {
-    if (!userInput) {
-      displayMessage("Invalid Input!");
-    } else if (userInput > secretNumber) {
-      displayMessage("Too High");
-      score--;
-      displayScore(score);
-      checkScore(score);
-    } else if (userInput < secretNumber) {
-      displayMessage("Too Low");
-      score--;
-      displayScore(score);
-      checkScore(score);
-    } else {
-      checkHighScore(score);
-      win();
-    }
+  if (!userInput) {
+    displayMessageScore("Invalid Input!", score);
+  } else if (userInput > secretNumber) {
+    score = checkScore("Too High!", score);
+  } else if (userInput < secretNumber) {
+    score = checkScore("Too Low!", score);
+  } else {
+    checkHighScore(score);
+    win();
   }
 };
 
@@ -30,37 +21,37 @@ const randomizer = function () {
   return Math.trunc(Math.random() * 20) + 1;
 };
 
-const displayMessage = function (message) {
-  //Display Message to Player
+const displayMessageScore = function (message, score) {
+  document.querySelector(".score").textContent = score;
   document.querySelector(".message").textContent = message;
 };
 
-const displayScore = function (score) {
-  //Display Current Score
-  document.querySelector(".score").textContent = score;
+const checkScore = function (message, score) {
+  if (score > 1) {
+    score--;
+    displayMessageScore(message, score);
+    return score;
+  } else {
+    score--;
+    displayMessageScore("Game Over!", score);
+    return score;
+  }
 };
 
 const reset = function () {
   score = 20;
-  displayScore(score);
-  displayMessage("Start guessing...");
+  displayMessageScore("Start guessing...", score);
   document.querySelector(".guess").value = "";
   document.querySelector(".number").textContent = "?";
   secretNumber = randomizer();
 
   //style to original
-  document.querySelector("body").style.backgroundColor = "black";
-};
-
-const checkScore = function (score) {
-  if (score === 0) {
-    displayMessage("Game Over!");
-  }
+  document.querySelector("body").style.backgroundColor = "#222";
 };
 
 const win = function () {
-  displayMessage("Correct!");
-  document.querySelector("body").style.backgroundColor = "green";
+  displayMessageScore("Correct!", score);
+  document.querySelector("body").style.backgroundColor = "#60b347";
   document.querySelector(".number").textContent = secretNumber;
   document.querySelector(".highscore").textContent = highestScore;
 };
@@ -74,8 +65,8 @@ const checkHighScore = function (score) {
 
 //Global Variables
 let highestScore = 0; //record highest score
-let secretNumber = randomizer(); //secret Number
 let score = 20; //Player Score
+let secretNumber = randomizer(); //secret Number
 
 //DOM
 document.querySelector(".check").addEventListener("click", check);
