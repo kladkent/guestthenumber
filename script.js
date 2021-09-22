@@ -19,8 +19,8 @@ const check = function () {
       displayScore(score);
       checkScore(score);
     } else {
-      highestScore++;
-      reset();
+      checkHighScore(score);
+      win();
     }
   }
 };
@@ -40,11 +40,16 @@ const displayScore = function (score) {
   document.querySelector(".score").textContent = score;
 };
 
-const again = function () {
+const reset = function () {
   score = 20;
   displayScore(score);
   displayMessage("Start guessing...");
   document.querySelector(".guess").value = "";
+  document.querySelector(".number").textContent = "?";
+  secretNumber = randomizer();
+
+  //style to original
+  document.querySelector("body").style.backgroundColor = "black";
 };
 
 const checkScore = function (score) {
@@ -53,19 +58,18 @@ const checkScore = function (score) {
   }
 };
 
-const reset = function () {
+const win = function () {
   displayMessage("Correct!");
   document.querySelector("body").style.backgroundColor = "green";
   document.querySelector(".number").textContent = secretNumber;
   document.querySelector(".highscore").textContent = highestScore;
-  secretNumber = randomizer();
+};
 
-  setTimeout(() => {
-    displayMessage("Start guessing...");
-    document.querySelector(".guess").value = "";
-    document.querySelector("body").style.backgroundColor = "black";
-    document.querySelector(".number").textContent = "?";
-  }, 1000);
+const checkHighScore = function (score) {
+  if (highestScore < score) {
+    highestScore = score;
+    return highestScore;
+  }
 };
 
 //Global Variables
@@ -75,4 +79,4 @@ let score = 20; //Player Score
 
 //DOM
 document.querySelector(".check").addEventListener("click", check);
-document.querySelector(".again").addEventListener("click", again);
+document.querySelector(".again").addEventListener("click", reset);
